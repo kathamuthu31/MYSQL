@@ -1,1 +1,514 @@
+                               mySQL
+how to create database:
+create database muthu_shope;
+use muthu_shope;
+how to delete database:
+drop database muthu_shope;
+alter database read only=0; if 1 the database only read only mode no modification
+how to create table in database:
+create table employees(
+emp_id int,
+emp_name varchar(50),
+salary decimal(7,2),
+join_date date
+);
+select * from employees;
+rename table family to employees;
+select * from family ;
+How to add key to table:
+alter table employees add phone_number varchar(10);
+alter table employees add email varchar(10);
+alter table employees rename column phone_number to ph_number;
+alter table employees drop column email_id;
+how to modify the table:
+alter table employees modify column email_id varchar(50) after ph_number;
+
+how to insert value in the table:
+insert into employees
+values (2, "lokesh S", 40000.50, "2023-04-01", 8098979556, "lokesh01@gmail.com"),
+         (3, "ashick basha N", 50000.50, "2023-11-28", 8592965088, "ashickbasha28@gmail.com");
+select * from employees;
+insert into employees (emp_id,emp_name,salary)
+value (4,"ajay R",60000.50);
+select * from employees;
+select emp_id,emp_name as name,salary from employees; 
+how to find particular column in table with mached  condition:
+select * from employees where emp_id=2;
+how to select condition based by using where key word:
+select * from employees where join_date is   null;
+select * from employees where join_date is  not null;
+select * from employees where salary >50000.50;
+how to update the value in the table:
+use muthu_shope;
+set sql_safe_updates=0;
+update employees
+set join_date="2023-12-05"
+where emp_id=4;
+select * from employees
+update employees
+set ph_number="1234567890",email_id="ajay25@gmail.com"
+where emp_id=4;
+select * from employees
+update employees
+set ph_number=null
+where emp_name="ajay R";
+select * from employees;
+how to delete the value in table:
+delete from employees
+where emp_id=4;
+select * from employees;
+how to rollback and commit;
+delete from employees
+where emp_id=6;
+set autocommit=0;
+rollback; // rollback key word is used for previous process in database and first set autocommit is off
+commit; //commit key word is used to finally process in database save
+default method in database like current time, dateandtime ,date:
+create table timestamps(
+doj date,
+dateandtime datetime,
+neram time
+);
+select * from timestamps;
+insert into timestamps
+value(current_date(),now(),current_time());
+constraints:
+create table products(
+p_id int,
+p_name varchar(30) unique,
+price decimal (6,2)
+);
+Insert into products
+Value(1,”rice”,300.45),(2,”rice”,300.46);// p_id is not allowed because unique keyword
+Select * from products;
+Or
+create table products(
+p_id int,
+p_name varchar(30) ,
+price decimal (6,2)
+);
+Alter table products
+Add constraint unique (p_name);
+Insert into products
+Value(1,”rice”,300.45),(2,”food”,300.46);// p_name is not allowed because unique keyword
+Like insert into products
+Value(1,”rice”,300.43);
+Select * from products;
+Not null constraint:
+create table products(
+p_id int,
+p_name varchar(30),
+price decimal(6,2)
+);
+alter table products
+modify p_name varchar(30) not null;
+insert into products
+value(1,"rice",300.45),
+(2,"weat",345.45);
+insert into products (p_id,price)
+value(3,300.45);
+select * from products
+drop table products;
+or
+create table products(
+p_id int,
+p_name varchar(30) not null,
+price decimal(6,2)
+);
+insert into products
+value(1,"rice",300.45),
+(2,"weat",345.45);
+insert into products (p_id,price)
+value(3,300.45);
+select * from products
+drop table products;
+check constraint:
+create table products(
+p_id int,
+p_name varchar(30),
+price decimal(6,2)
+constraint check_price check(price < 100)
+);
+Insert into products
+Value (1,”rice”,300.56);
+Select * from products;
+Drop table products;
+Taske in constraints:
+create table products(
+p_id int,
+p_name varchar(30)   ,
+price decimal(6,2) 
+);
+alter table products
+Add constraint unique (p_name);
+alter table products
+modify p_name varchar(30) not null;
+
+
+insert into products 
+values (1,"rice",12),
+(2,"sara",122);
+select * from products;
+primary key in MySQL:
+create table transactions
+(t_id int  primary key,
+amount decimal(6,2)
+);
+insert into transactions
+values (1,30.64);
+select * from transactions;
+auto_increment in primary key value:
+create table transactions
+(t_id int primary key auto_increment ,
+amount decimal(6,2)
+);
+insert into transactions(amount)
+values (30.64);
+insert into transactions(amount)
+values (40.64);
+select * from transactions;
+how to add primary key to existing table:
+create table transactions
+(t_id int  ,
+amount decimal(6,2)
+);
+alter table transactions
+add constraint primary key(t_id);
+insert into transactions
+values (1,30.64);
+insert into transactions
+values (2,40.64);
+select * from transactions;
+auto_increment in existing primary key :
+create table transactions
+(t_id int  ,
+amount decimal(6,2)
+);
+alter table transactions
+add constraint primary key(t_id);
+alter table transactions
+modify t_id int auto_increment;
+insert into transactions(amount)
+values (30.64);
+insert into transactions(amount)
+values (40.64);
+select * from transactions;
+how to set starting value in auto increment:
+create table transactions
+(t_id int  ,
+amount decimal(6,2)
+);
+alter table transactions
+add constraint primary key(t_id);
+alter table transactions
+modify t_id int auto_increment;
+alter table transactions
+auto_increment=200;
+insert into transactions(amount)
+values (30.64);
+insert into transactions(amount)
+values (40.64);
+select * from transactions;
+foreign key:
+create table customers(
+c_id int primary key auto_increment,
+c_name varchar(20),
+age int);
+insert into customers(c_name,age)
+values ("muthu",20),
+("prakash",20);
+
+select * from customers;
+create table transactions(
+t_id int primary key auto_increment,
+amount decimal(6,2),
+customers_id int not null,
+foreign key(customers_id) references customers(c_id)
+);
+insert into transactions(amount,customers_id)
+values (34,1),
+(45,2);
+select * from transactions;
+foreign key:
+use muthu_shope;
+set sql_safe_updates=0;
+create table customers(
+c_id int primary key auto_increment,
+c_name varchar(20),
+age int);
+insert into customers(c_name,age)
+values ("muthu",20),
+("prakash",20);
+
+select * from customers;
+drop table customers;
+create table transactions(
+t_id int primary key auto_increment,
+amount decimal(6,2),
+customers_id int not null,
+foreign key(customers_id) references customers(c_id)
+);
+insert into transactions(amount,customers_id)
+values (34,1),
+(45,2);
+select * from transactions
+drop table transactions;
+alter table transactions
+drop foreign key transactions_ibfk_1;
+alter table transactions
+add constraint fk_c_id
+foreign key(customers_id) references customers(c_id);
+alter table transactions
+drop foreign key fk_c_id;
+delete from customers
+where c_id=1; // can not bee delete the customers table because it is foreign key to another table
+join :
+select t_id,amount,c_name from transactions right join customers
+on transactions.customers_id =customers.c_id;
+function:
+create database technology;
+use technology;
+create table employees(
+e_id int primary key auto_increment,
+name varchar(50) not null,
+age int not null,
+salary int
+);
+select * from employees;
+describe employees;
+drop database technology;
+insert into employees(name,age,salary)
+values ("muthu",20,400),
+("lokesh",30,300),
+("abi",20,500),
+("ajay",50,700);
+select * from employees;
+select count(name) from employees
+where age<30;
+select max(salary) as highSalary from employees;
+select min(salary) from employees;
+select sum(salary) from employees;
+select concat(e_id,name) from employees;
+logical operators:
+select * from employees
+where age>20 and salary>200;
+select * from employees
+where age>20 or salary>200;
+select * from employees
+where not age=50;
+select * from employees
+where age between 25 and 50; 
+select * from employees
+where age in(50,29);
+wild card characters:
+select * from employees
+where name like"a%";
+select * from employees
+where name like"%h";
+select * from employees
+where name ="muthu";
+select * from employees
+where join_date like "____-04-25";
+select * from employees
+where join_date like "2022-__-__";
+select * from employees
+where name like "_u%";
+select * from employees
+where join_date like "%-04-%";
+Order By & limit:
+select * from employees
+order by name desc;
+
+select * from employees
+order by age ,name;
+
+select * from employees
+order by age ,name desc;
+
+select * from employees
+order by age,join_date desc;
+
+select * from employees
+order by salary desc
+limit 3;
+
+select * from employees
+limit 2,2;
+select * from employees
+limit 1,3;
+--  offset,limit
+Union & union all
+select * from employees
+        union 
+        select * from person1;
+or
+select * from employees
+        union all
+        select * from person1;
+self join:
+select a.e_id,a.name,a.manager_id,b.e_id,b.name,b.manager_id from employees a
+ inner join employees b
+ on a.manager_id=b.e_id
+views:
+create view employees_salary as
+ select name,salary from employees;
+ select * from employees_salary
+ order by name; -- where salary >=400
+ select * from employees;
+ insert into employees (name,age,salary,join_date,manager_id)
+ values("sara",33,500,"1999-04-24",1);
+indexes:
+show indexes from employees;
+ create index name_idx
+ on employees(name,salary);
+ select * from employees
+ where salary=500 and name="abi";
+ alter table employees
+ drop index name_idx;
+Sub Queries:
+-- sub queries
+ select avg(salary) from employees;
+ select e_id,name,salary from employees
+ where salary<(select avg(salary) from employees);-- sub queries
+ -- who are all reporting to muthu
+ select * from employees;
+ select * from employees
+ where manager_id=(select e_id from employees where name="muthu");
+ -- who are all reporting to muthu,ajay
+ select * from employees
+ where manager_id in (select e_id from employees where name="muthu" or name="ajay");
+ -- who are salary>500 print manager name
+ select name as manager from employees
+where e_id in (select manager_id from employees where salary>=500)
+Group By & Having:
+-- Group by & having
+create table bills(
+id  int primary key auto_increment,
+name varchar(30),
+amount int,
+join_date date
+)
+insert into bills (name,amount,join_date)
+values("muthu",2000,"2025-11-23"),
+("lokesh",2500,"2025-10-23"),
+("ajay",3500,"2025-10-23");
+select * from bills;
+select sum(amount) as total_amount,join_date from bills
+group by join_date;
+select sum(amount) as total_amount,name from bills
+group by name;
+select count(amount) as total_bills,sum(amount)as total_amount, name from bills
+group by name;
+•	with rollup:
+select sum(amount) as total_amount,name from bills
+group by name with rollup;
+Window Function:
+select name,salary ,row_number() over(order by salary desc) as ranck from employees;
+select name,salary ,row_number() over(order by join_date asc) as ranck from employees;
+select name,salary ,row_number() over(order by join_date ) as ranck from employees;
+select name,salary ,row_number() over( order by salary asc) as ranck ,rank() over(order by salary),
+dense_rank() over(order by salary) from employees;
+•	partition by:
+select name,salary, 
+row_number() over(partition by manager_id order by join_date) as rownumber,rank() over(order by join_date) as rn,
+dense_rank() over(order by join_date) as dr
+ from employees1;
+ select * from employees1;
+on delete:
+select * from bills;
+alter table bills
+add column doctor_id int;
+select * from employees;
+update bills
+set doctor_id=3
+where id=6;
+alter table bills
+add constraint fk_doctor_id
+foreign key (doctor_id) references employees(e_id)
+on delete set null;
+
+delete from employees
+where e_id=1;
+select * from bills;
+-- no delete set null
+-- no delete cascade
+alter table bills
+drop constraint fk_doctor_id;
+
+alter table bills
+add constraint fk_doctor_id
+foreign key (doctor_id) references employees(e_id)
+on delete  cascade;
+delete from employees
+where e_id=4;
+select * from bills;
+-- stored procedure
+delimiter //
+create procedure get_employees()
+begin
+     select * from employees;
+end//
+     delimiter ;
+     call get_employees();
+     select * from employees;
+     delimiter //
+create procedure get_employees_by_id(in id int,in e_age int)
+begin
+     select * from employees
+     where e_id=id and age=e_age;
+end//
+     delimiter ;
+     call get_employees_by_id(2,30);
+     select * from employees;
+     drop procedure get_employees_by_id;
+delimiter//
+create procedure get_employees_by_id(out e_ count int)
+begin
+select count(name) into e_count  from emplployees;
+end//
+delimiter;
+call get_employees_by_id(@e_count);
+select @e_count;
+
+delimiter //
+create procedure get_employees_by_id(out e_count int)
+begin
+select count(name) into e_count  from employees;
+end//
+delimiter ;
+call get_employees_by_id(@e_count);
+select @e_count;
+Triggers in SQL:
+Use muthu_shope;
+inserting default value using triggers
+delimiter //
+create trigger before_insert_employees
+before insert on employees
+for each row
+begin
+set new.salary=ifnull(new.salary,25000);
+end //
+delimiter ;
+insert  into employees(emp_id,emp_name)
+values(7,"kavitha");
+select * from employees;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
